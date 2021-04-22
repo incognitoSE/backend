@@ -4,8 +4,8 @@ from django.db import models
 
 class House(models.Model):
     link = models.URLField(blank=True)
-    # wow = models.IntegerField()
     location = models.TextField(max_length=400, blank=False)
+    # wow = models.IntegerField()
     area = models.IntegerField(null=False, blank=False)
     room = models.IntegerField(null=False, blank=False)
     year = models.IntegerField(null=False, blank=False)
