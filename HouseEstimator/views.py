@@ -1,8 +1,8 @@
-from rest_framework import viewsets
-from rest_framework import status
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .models import House
 from .serializers import HouseSerializer
+import pickle
 
 
 class Houseview(viewsets.ModelViewSet):
@@ -16,9 +16,14 @@ class Houseview(viewsets.ModelViewSet):
         serializer = HouseSerializer(data=request.data)
 
         if serializer.is_valid():
+            with open('Model/houseestimator.pkl', 'rb') as file:
+                picled_model = pickle.load(file)
+
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
+
             area = serializer.data.get("area")
+
             return Response(area, status=status.HTTP_201_CREATED, headers=headers)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
