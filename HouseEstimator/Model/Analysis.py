@@ -25,6 +25,7 @@ y_predictions = reg.predict(X_test)
 print("R-squared :", r2_score(y_test, y_predictions))
 
 name = "houseestimator.pkl"
+print(reg.predict(np.array([32, 99, 1, 1395]).reshape(1, -1)))
 
 with open(name, 'wb') as file:
     pickle.dump(reg, file)

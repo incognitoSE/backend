@@ -22,6 +22,9 @@ class Houseview(viewsets.ModelViewSet):
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
 
+            location = serializer.data.get("location")
+            room = serializer.data.get("room")
+            yaer = serializer.data.get("yaer")
             area = serializer.data.get("area")
 
             return Response(area, status=status.HTTP_201_CREATED, headers=headers)
