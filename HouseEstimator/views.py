@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from .models import House
 from .serializers import HouseSerializer
 import pickle
+import numpy as np
 
 
 class Houseview(viewsets.ModelViewSet):
@@ -17,17 +18,21 @@ class Houseview(viewsets.ModelViewSet):
 
         if serializer.is_valid():
             with open('Model/houseestimator.pkl', 'rb') as file:
-                picled_model = pickle.load(file)
+                pickled_model = pickle.load(file)
 
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
 
             location = serializer.data.get("location")
+            area = serializer.data.get("area")
             room = serializer.data.get("room")
             yaer = serializer.data.get("yaer")
-            area = serializer.data.get("area")
+            price = pickled_model.predict(np.array([location, area, room, yaer]).reshape(1, -1))
+            house = House(area=area, location=location, room=room, yaer=yaer, price=price)
 
-            return Response(area, status=status.HTTP_201_CREATED, headers=headers)
+            house.save()
+
+            return Response(price, status=status.HTTP_201_CREATED, headers=headers)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
