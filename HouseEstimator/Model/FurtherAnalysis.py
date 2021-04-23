@@ -25,8 +25,7 @@ allyears = sorted(set(df_house['year'][(1370 < df_house['year']) & (df_house['ye
 # plt.show()
 
 
-# prices = [list((df_house['price'][(df_house['year'] == _class)
-#                                   & (df_house["room"] < 8)]/100000000000)) for _class in tenyears]
+# prices = [list((df_house['price'][df_house['year'] == _class]/100000000000)) for _class in tenyears]
 # plt.figure()
 # plt.title('Boxplot of Price base on year')
 # plt.boxplot(prices, labels=tenyears)
@@ -50,22 +49,21 @@ allyears = sorted(set(df_house['year'][(1370 < df_house['year']) & (df_house['ye
 
 # plt.figure()
 # plt.title("area VS price")
-# plt.scatter(df_house["area"][df_house["room"] < 8], df_house["price"][df_house["room"] < 8])
+# plt.scatter(df_house["area"], df_house["price"])
 # plt.xlabel("area")
 # plt.ylabel("price")
 # plt.show()
 
 # plt.figure()
 # plt.title("year VS price")
-# plt.scatter(df_house["year"][df_house["room"] < 8], df_house["price"][df_house["room"] < 8], color='r')
+# plt.scatter(df_house["year"], df_house["price"], color='r')
 # plt.xlabel("year")
 # plt.ylabel("price")
 # plt.show()
 
 
-# pricelist = [((df_house['price'][(df_house['year'] == _class) & (df_house["room"] < 8)].max()
-#                - (df_house['price'][(df_house['year'] == _class) & (df_house["room"] < 8)].min()), _class))
-#              for _class in allyears]
+# pricelist = [((df_house['price'][df_house['year'] == _class].max()
+#                - (df_house['price'][df_house['year'] == _class].min()), _class)) for _class in allyears]
 #
 #
 # pricesince = []
@@ -83,9 +81,7 @@ allyears = sorted(set(df_house['year'][(1370 < df_house['year']) & (df_house['ye
 # plt.show()
 
 
-# pricelist2 = [(df_house['price'][(df_house['year'] == _class)
-#                                  & (df_house["room"] < 8)].mean()/1000000000, _class) for _class in allyears]
-#
+# pricelist2 = [(df_house['price'][df_house['year'] == _class].mean()/1000000000, _class) for _class in allyears]
 #
 # pricesince = []
 # yearsince = []
