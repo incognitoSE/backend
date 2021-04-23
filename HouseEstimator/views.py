@@ -32,7 +32,7 @@ class Houseview(viewsets.ModelViewSet):
 
             house.save()
 
-            return Response(price, status=status.HTTP_201_CREATED, headers=headers)
+            return Response({"price": price}, status=status.HTTP_201_CREATED, headers=headers)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
