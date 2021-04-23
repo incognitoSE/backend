@@ -21,7 +21,6 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
 class LoginView(GenericAPIView):
     serializer_class = AuthTokenSerializer
-    permission_classes = UpdatingProfilePermission
 
     def post(self, requset):
         data = requset.data

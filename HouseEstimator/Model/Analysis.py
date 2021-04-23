@@ -22,6 +22,7 @@ X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
 reg = LinearRegression()
 reg.fit(X_train, y_train)
 y_predictions = reg.predict(X_test)
+print(y_predictions)
 print("R-squared :", r2_score(y_test, y_predictions))
 
 name = "houseestimator.pkl"
