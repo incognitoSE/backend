@@ -8,6 +8,10 @@ import numpy as np
 
 class Houseview(viewsets.ModelViewSet):
 
+    def list(self, request, *args, **kwargs):
+        return Response({"Message": "Every thing is Ok"}, status=status.HTTP_201_CREATED)
+
+
     serializer_class = HouseSerializer
     queryset = House.objects.all()
 
