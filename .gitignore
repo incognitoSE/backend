@@ -1,0 +1,16 @@
+User\__pycache__
+SimCardEstimator\__pycache__
+MachineLearningEstimator\__pycache__
+HouseEstimator\__pycache__
+CarEstimator\__pycache__
+CarEstimator/migrations/__pycache__/
+HouseEstimator/migrations/__pycache__/__init__.cpython-38.pyc
+SimCardEstimator/migrations/__pycache__/
+User/migrations/__pycache__/
+venv
+**/__pycache__
+**/houseestimator.pkl
+MachineLearningEstimator/.env
+
+HouseEstimator/Model/lableencoder.pkl
+HouseEstimator/Model/houseestimator.pkl
