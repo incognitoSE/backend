@@ -43,7 +43,7 @@ class Houseview(viewsets.ModelViewSet):
             #                           room=room).values()
             data = {
                 "currenthouse": serializer.data,
-                "price": 800000000,
+                "price": 80000000,
                 "houses": [{"area": 120, "location": ' فرشته', "room": 2, "year": 1390}]
             }
 
