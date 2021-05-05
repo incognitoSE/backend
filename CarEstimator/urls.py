@@ -3,7 +3,7 @@ from rest_framework import routers
 from .views import CarView
 
 router = routers.DefaultRouter()
-router.register('api', CarView, basename="CarEstimatorViewSet")
+router.register('Car', CarView, basename="CarEstimatorViewSet")
 
 urlpatterns = [
     path('', include(router.urls)),
