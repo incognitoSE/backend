@@ -18,11 +18,11 @@ class Houseview(viewsets.ModelViewSet):
 
         if serializer.is_valid():
 
-            with open('HouseEstimator/Model/lableencoder.pkl', 'rb') as file:
-                L_encoder = pickle.load(file)
-
-            with open('HouseEstimator/Model/houseestimator.pkl', 'rb') as file:
-                pickled_model = pickle.load(file)
+            # with open('HouseEstimator/Model/lableencoder.pkl', 'rb') as file:
+            #     L_encoder = pickle.load(file)
+            #
+            # with open('HouseEstimator/Model/houseestimator.pkl', 'rb') as file:
+            #     pickled_model = pickle.load(file)
 
             headers = self.get_success_headers(serializer.data)
 
@@ -32,19 +32,19 @@ class Houseview(viewsets.ModelViewSet):
             location = serializer.data.get("location")
             location = f'{location} '
 
-            L_encoder.fit(list(location))
-            loc = L_encoder.transform(list(location))[0]
+            # L_encoder.fit(list(location))
+            # loc = L_encoder.transform(list(location))[0]
+            #
+            # price = pickled_model.predict(np.array([loc, area, room, year]).reshape(1, -1))
 
-            price = pickled_model.predict(np.array([loc, area, room, year]).reshape(1, -1))
-
-            qs = House.objects.filter(location=location,
-                                      price__gte=price - 1000000000,
-                                      price__lte=price + 1000000000,
-                                      room=room).values()
+            # qs = House.objects.filter(location=location,
+            #                           price__gte=price - 1000000000,
+            #                           price__lte=price + 1000000000,
+            #                           room=room).values()
             data = {
                 "currenthouse": serializer.data,
-                "price": price[0],
-                "houses": qs
+                "price": 800000000,
+                "houses": [{"area": 120, "location": ' فرشته', "room": 2, "year": 1390}]
             }
 
             return Response(data, status=status.HTTP_201_CREATED, headers=headers)
