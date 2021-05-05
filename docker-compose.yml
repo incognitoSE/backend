@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+
+  front:
+    image: safdarian/incognito-frontend
+    container_name: front
+    depends_on:
+        - back
+    ports:
+      - 8080:8080
+    restart: on-failure
+
+
+  back:
+    image: safdarian/incognito-backend
+    container_name: back
+    ports:
+      - 8000:8000
+    restart: on-failure
