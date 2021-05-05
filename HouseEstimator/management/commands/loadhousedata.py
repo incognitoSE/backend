@@ -7,6 +7,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for row in DictReader(open('HouseEstimator/Model/house_database.csv')):
             house = House()
+            house.pk = row['id']
             house.area = row['area']
             house.price = row['price']
             house.room = row['room']
