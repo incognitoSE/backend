@@ -5,8 +5,6 @@ services:
   front:
     image: safdarian/incognito-frontend
     container_name: front
-    depends_on:
-        - back
     ports:
       - 8080:8080
     restart: on-failure
