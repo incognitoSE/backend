@@ -54,6 +54,7 @@ class Houseview(viewsets.ModelViewSet):
     # house = House(area=area, location=location, room=room, year=year, price=price)
     # house.save()
 
+
     '''
     def list(self, request):
         pass
