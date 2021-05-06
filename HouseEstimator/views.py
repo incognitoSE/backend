@@ -39,14 +39,14 @@ class Houseview(viewsets.ModelViewSet):
             loc = L_encoder.transform(list(location))[0]
 
             price = pickled_model.predict(np.array([loc, area, room, year]).reshape(1, -1))
-
+            price = int(price[0])
             qs = list(House.objects.filter(location=location,
-                                      price__gte=price - 1000000000,
-                                      price__lte=price + 1000000000,
-                                      room=room).values())
+                                           price__gte=price - 1000000000,
+                                           price__lte=price + 1000000000,
+                                           room=room).values())
             data = {
                 "currenthouse": serializer.data,
-                "price": price[0],
+                "price": price,
                 "houses": qs,
             }
 
