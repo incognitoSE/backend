@@ -11,8 +11,6 @@ venv
 **/__pycache__
 **/houseestimator.pkl
 MachineLearningEstimator/.env
-
-HouseEstimator/Model/lableencoder.pkl
 HouseEstimator/Model/houseestimator.pkl
 .vscode
 .pip_cache
