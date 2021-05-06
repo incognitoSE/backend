@@ -22,7 +22,7 @@ blocks:
         - name: 'Job #1'
           commands:
             - 'echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin'
-            - 'docker pull $DOCKER_USERNAME/incognito_se:latest || true'
+            - 'docker pull $DOCKER_USERNAME/incognito-backend:latest || true'
             - 'docker build --cache-from=$DOCKER_USERNAME/incognito-backend:latest -t $DOCKER_USERNAME/incognito-backend:latest .'
             - 'docker push $DOCKER_USERNAME/incognito-backend:latest'
       prologue:
