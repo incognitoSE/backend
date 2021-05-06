@@ -11,8 +11,8 @@ class Houseview(viewsets.ModelViewSet):
     serializer_class = HouseSerializer
     queryset = House.objects.all()
 
-    # def list(self, request, *args, **kwargs):
-    #     return Response({"Message": "Every thing is Ok"}, status=status.HTTP_200_OK)
+    def list(self, request, *args, **kwargs):
+        return Response({"Message": "Every thing is Ok"}, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         serializer = HouseSerializer(data=request.data)
