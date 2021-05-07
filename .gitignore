@@ -14,3 +14,4 @@ MachineLearningEstimator/.env
 HouseEstimator/Model/houseestimator.pkl
 .vscode
 .pip_cache
+.dockerignore
