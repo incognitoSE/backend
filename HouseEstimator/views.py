@@ -11,16 +11,16 @@ class Houseview(viewsets.ModelViewSet):
     serializer_class = HouseSerializer
     queryset = House.objects.all()
 
-    # def list(self, request, *args, **kwargs):
-    #     return Response({"Message": "Every thing is Ok"}, status=status.HTTP_200_OK)
+    def list(self, request, *args, **kwargs):
+        return Response({"area": "", "room": "", "year": "", "location": ""}, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         serializer = HouseSerializer(data=request.data)
 
         if serializer.is_valid():
-            with zipfile.ZipFile("HouseEstimator/Model/houseestimator.zip", 'r') as zip_ref:
-                zip_ref.extractall("HouseEstimator/Model")
-
+            # with zipfile.ZipFile("HouseEstimator/Model/houseestimator.zip", 'r') as zip_ref:
+            #     zip_ref.extractall("HouseEstimator/Model")
+ 
             with open('HouseEstimator/Model/lableencoder.pkl', 'rb') as file:
                 L_encoder = pickle.load(file)
 
@@ -40,6 +40,7 @@ class Houseview(viewsets.ModelViewSet):
 
             price = pickled_model.predict(np.array([loc, area, room, year]).reshape(1, -1))
             price = int(price[0])
+            # price = 3000000000
             qs = list(House.objects.filter(location=location,
                                            price__gte=price - 1000000000,
                                            price__lte=price + 1000000000,
