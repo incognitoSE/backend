@@ -3,6 +3,7 @@ djangorestframework~=3.12.4
 PyJWT~=2.0.1
 pandas~=1.2.2
 numpy~=1.18.5
+scikit-learn~=0.24.1
 requests~=2.24.0
 python-dotenv~=0.17.0
 python-dotenv~=0.17.0

@@ -1,10 +1,14 @@
+import os
+
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
 
 
 df_house = pd.read_csv("Data.csv")
 df_house.columns = ['link', 'location', 'area', 'room', 'year', 'price']
 
+# print(os.getcwd())
 
 room_number = sorted(set(df_house['room'][df_house['room'] < 8]))
 tenyears = sorted(set(df_house['year'][df_house['year'] % 4 == 0]))
