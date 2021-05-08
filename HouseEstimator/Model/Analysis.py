@@ -21,7 +21,7 @@ for i in range(len(x)):
     x[i][0] = (le.transform([x[i][0]]))[0]
 X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
 y_train = y_train.astype('int')
-rf = RandomForestClassifier(max_depth= 10, random_state=0)
+rf = RandomForestClassifier(max_depth=10, random_state=0)
 rf.fit(X_train, y_train)
 y_predictions = rf.predict(X_test)
 # reg = LinearRegression(positive=True)
