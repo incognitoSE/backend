@@ -4,7 +4,7 @@ from .models import House
 from .serializers import HouseSerializer
 import pickle
 import numpy as np
-import zipfile
+from rest_framework import permissions
 
 
 with open('HouseEstimator/Model/lableencoder.pkl', 'rb') as file:
@@ -17,6 +17,7 @@ with open('HouseEstimator/Model/houseestimator.pkl', 'rb') as file:
 class Houseview(viewsets.ModelViewSet):
     serializer_class = HouseSerializer
     queryset = House.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
         return Response({"area": "", "room": "", "year": "", "location": ""}, status=status.HTTP_200_OK)
@@ -39,6 +40,7 @@ class Houseview(viewsets.ModelViewSet):
         price = pickled_model.predict(np.array([loc, area, room, year]).reshape(1, -1))
         price = int(price[0])
         # price = 3000000000
+
         qs = list(House.objects.filter(location=location).values())
         data = {
             "currenthouse": serializer.data,

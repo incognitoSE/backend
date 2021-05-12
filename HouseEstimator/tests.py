@@ -15,33 +15,30 @@ class HouseEstimatorTest(APITestCase):
         self.invalid2 = {"area": 120, "location": ' فرشته', "room": 2}
 
     def test_valid_data(self):
-        response = self.client.post("/HEstimator/House/",
-                                    data=json.dumps(self.valid), content_type='application/json')
+        response = self.client.Post("/HEstimator/House/")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_invalid_data(self):
-        response = self.client.post("/HEstimator/House/",
-                                    data=json.dumps(self.invalid), content_type='application/json')
+        response = self.client.Post("/HEstimator/House/")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_invalid_data2(self):
-        response = self.client.post("/HEstimator/House/",
-                                    data=json.dumps(self.invalid2), content_type='application/json')
+        response = self.client.Post("/HEstimator/House/")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_price_data(self):
-        price = self.client.post("/HEstimator/House/", data=self.valid).data.get("price")
+        price = self.client.Post("/HEstimator/House/").data.get("price")
         self.assertIsInstance(price, int)
 
     def test_houses_data(self):
-        houses = self.client.post("/HEstimator/House/", data=self.valid).data.get("houses")
+        houses = self.client.Post("/HEstimator/House/").data.get("houses")
         self.assertIsInstance(houses, list)
 
     def test_current_data(self):
-        room = self.client.post("/HEstimator/House/", data=self.valid).data.get("currenthouse").get("room")
-        location = self.client.post("/HEstimator/House/", data=self.valid).data.get("currenthouse").get("location")
-        area = self.client.post("/HEstimator/House/", data=self.valid).data.get("currenthouse").get("area")
-        year = self.client.post("/HEstimator/House/", data=self.valid).data.get("currenthouse").get("year")
+        room = self.client.Post("/HEstimator/House/").data.get("currenthouse").get("room")
+        location = self.client.Post("/HEstimator/House/").data.get("currenthouse").get("location")
+        area = self.client.Post("/HEstimator/House/").data.get("currenthouse").get("area")
+        year = self.client.Post("/HEstimator/House/").data.get("currenthouse").get("year")
         self.assertEqual(room, self.valid.get("room"))
         self.assertEqual(year, self.valid.get("year"))
         self.assertEqual(location, self.valid.get("location"))

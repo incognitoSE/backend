@@ -11,10 +11,7 @@ class Command(BaseCommand):
             house.area = row['area']
             house.price = row['price']
             house.room = row['room']
-            if row["year"]:
-                house.year = int(float(row['year']))
-            else:
-                house.year = -1
+            house.year = int(float(row['year'])) if row["year"] else -1
             house.location = row['location']
             house.link = row['link']
             house.save()

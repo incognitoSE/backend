@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('HEstimator/', include('HouseEstimator.urls')),
     path('CEstimator/', include('CarEstimator.urls')),
+    path('SEstimator/', include('SimCardEstimator.urls')),
     path('User/', include('User.urls')),
 
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),

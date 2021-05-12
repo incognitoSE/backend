@@ -8,23 +8,10 @@ class Command(BaseCommand):
         for row in DictReader(open('CarEstimator/Model/CarData.csv')):
             car = Car()
             car.pk = row['id']
-            if row['price'] == 'nan':
-                car.price = -1
-            else:
-                car.price = row['price']
-            if row['year'] == 'nan':
-                car.year = -1
-            else:
-                car.year = row['year']
-            if row["link"] == 'nan':
-                car.link = "https://bama.ir/"
-            else:
-                car.link = row['link']
-            if row['mileage'] == 'nan' or row['mileage'] == '-':
-                car.mileage = -1
-            else:
-                car.mileage = row['mileage']
-
+            car.price = -1 if row['price'] == 'nan' else row['price']
+            car.year = -1 if row['year'] == 'nan' else row['year']
+            car.link = "https://bama.ir/" if row["link"] == 'nan' else row['link']
+            car.mileage = -1 if row['mileage'] in ['nan', '-'] else row['mileage']
             car.model = row['model']
             car.brand = row['brand']
             car.body_status = row['body_status']
