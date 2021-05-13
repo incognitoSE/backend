@@ -1,12 +1,14 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .models import Simcard
+from rest_framework.permissions import IsAuthenticated
 from .serializers import SimcardSerializer
 
 
 class SimcardView(viewsets.ModelViewSet):
     serializer_class = SimcardSerializer
     queryset = Simcard.objects.all()
+    permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
         return Response({"Message": "Every thing is Ok"}, status=status.HTTP_200_OK)

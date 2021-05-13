@@ -48,6 +48,14 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         return f"{self.email}"
 
 
+# class Userhistory(models.Model):
+#     user_profile = models.OneToOneField("UserProfile", on_delete=models.CASCADE)
+#     housemodel = models.ForeignKey("House", on_delete=models.CASCADE)
+#     carmodel = models.ForeignKey("Car", on_delete=models.CASCADE)
+#     # TODO: SIMCARD
+#     used = models.DateTimeField(auto_now_add=True)
+
+
 # class UserWallet(models.Model):
 #     amount = models.IntegerField(default=0)
 #     user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)

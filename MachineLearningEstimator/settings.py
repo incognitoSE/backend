@@ -88,7 +88,7 @@ SWAGGER_SETTINGS = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'User.jwtauth.JWTAuthentication',
+            'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
 

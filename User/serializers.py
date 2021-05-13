@@ -19,3 +19,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+
+# class UserhistorySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Userhistory
+#         fields = ("id", "user_profile", "housemodel", "carmodel", "used")
+#         extra_kwargs = {'user_profile': {"read_only": True}}

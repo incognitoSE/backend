@@ -12,6 +12,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
             return None
 
         prefix, token = auth_data.decode("utf-8").split(" ")
+        # print(token)
         try:
             payload = jwt.decode(token, "SMT")
             user = UserProfile.objects.get(email=payload["email"])

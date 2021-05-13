@@ -6,6 +6,7 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authentication import TokenAuthentication
 from django.contrib import auth
 import jwt
+from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import UserProfileSerializer
 from .models import UserProfile
 from .permissions import UpdatingProfilePermission
@@ -19,26 +20,25 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     permission_classes = (UpdatingProfilePermission,)
 
 
-class LoginView(GenericAPIView):
-    serializer_class = AuthTokenSerializer
-
-    def post(self, requset):
-        data = requset.data
-
-        username = data.get("username").lower()
-
-        password = data.get("password")
-
-        user = auth.authenticate(username=username, password=password)
-        if user:
-            serializer = UserProfileSerializer(user)
-            auth_token = jwt.encode({'username': user.email}, "SMT")
-
-            data = {
-                "user": serializer.data,
-                "token": auth_token
-            }
-            return Response(data, status=status.HTTP_200_OK)
-
-        return Response({'detail': 'invalid credentials or may have not signed up yet'},
-                        status=status.HTTP_401_UNAUTHORIZED)
+# class LoginView(GenericAPIView):
+#     serializer_class = AuthTokenSerializer
+#
+#     def post(self, requset):
+#         data = requset.data
+#         username = data.get("username").lower()
+#         password = data.get("password")
+#
+#         user = auth.authenticate(username=username, password=password)
+#
+#         if user:
+#             serializer = UserProfileSerializer(user)
+#             auth_token = jwt.encode({'username': user.email}, "SMT")
+#
+#             data = {
+#                 "user": serializer.data,
+#                 "token": auth_token
+#             }
+#             return Response(data, status=status.HTTP_200_OK)
+#
+#         return Response({'detail': 'invalid credentials or may have not signed up yet'},
+#                         status=status.HTTP_401_UNAUTHORIZED)

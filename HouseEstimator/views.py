@@ -4,7 +4,7 @@ from .models import House
 from .serializers import HouseSerializer
 import pickle
 import numpy as np
-from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticated
 
 
 with open('HouseEstimator/Model/lableencoder.pkl', 'rb') as file:
@@ -17,7 +17,7 @@ with open('HouseEstimator/Model/houseestimator.pkl', 'rb') as file:
 class Houseview(viewsets.ModelViewSet):
     serializer_class = HouseSerializer
     queryset = House.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
         return Response({"area": "", "room": "", "year": "", "location": ""}, status=status.HTTP_200_OK)
