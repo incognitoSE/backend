@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Simcard(models.Model):
-    CHOICES = ((0, 0), (1, 1))
+    CHOICES = ((0, "خیر"), (1, "بله"))
     number = models.IntegerField(null=False, blank=False)
     rond = models.IntegerField(choices=CHOICES)
     stock = models.IntegerField(choices=CHOICES)
