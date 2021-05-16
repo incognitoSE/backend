@@ -17,7 +17,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     permission_classes = (UpdatingProfilePermission,)
 
 
-class UserSignup (APIView):
+class UserSignup(APIView):
     serializer_class = UserProfileSerializer
     queryset = UserProfile.objects.all()
 
@@ -47,7 +47,6 @@ class UserSignup (APIView):
 class UserHistoryViewset(viewsets.ModelViewSet):
     serializer_class = UserhistorySerializer
     queryset = UserHistory.objects.all()
-    # TODO: check authentication
     permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):

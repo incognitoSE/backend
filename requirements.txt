@@ -10,3 +10,4 @@ python-dotenv~=0.17.0
 drf_yasg
 django-cors-headers
 djangorestframework-simplejwt
+jdatetime

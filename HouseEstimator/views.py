@@ -4,6 +4,9 @@ from .models import House
 from .serializers import HouseSerializer
 from User.models import UserHistory
 import pickle
+from datetime import datetime
+from datetime import date
+import jdatetime
 import numpy as np
 from rest_framework.permissions import IsAuthenticated
 
@@ -47,10 +50,17 @@ class Houseview(viewsets.ModelViewSet):
         data = {
             "currenthouse": serializer.data,
             "price": price,
-            "houses": len(qs),
+            "houses": qs,
         }
+        now = datetime.now()
+        today = date.today()
+        current_time = now.strftime("%H:%M:%S")
+        # date_ = today.strftime("%d/%m/%Y")
+        # jdate = jdatetime.datetime.now()
+        date_time = jdatetime.datetime.now().strftime("%d %b %Y")
+        time = f"{date_time} at {current_time}"
         history_data = f"area: {area}, room: {room}, year: {year}, location: {location}"
-        history = UserHistory(user=user, model="house", data=history_data, price=price)
+        history = UserHistory(user=user, model="house", data=history_data, price=price, date=time)
         history.save()
         return Response(data, status=status.HTTP_201_CREATED, headers=headers)
 

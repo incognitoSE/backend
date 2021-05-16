@@ -25,5 +25,4 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class UserhistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = UserHistory
-        fields = ("id", "user_profile", "housemodel", "carmodel", "used")
-        extra_kwargs = {'user_profile': {"read_only": True}}
+        fields = ("id", "user", "data", "price", "date")
