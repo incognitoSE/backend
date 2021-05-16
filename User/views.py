@@ -7,8 +7,9 @@ from rest_framework.authentication import TokenAuthentication
 from django.contrib import auth
 import jwt
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserProfileSerializer
-from .models import UserProfile
+from rest_framework.permissions import IsAuthenticated
+from .serializers import UserProfileSerializer, UserHistorySerializer
+from .models import UserProfile, UserHistory
 from .permissions import UpdatingProfilePermission
 from django.conf import settings
 
@@ -18,6 +19,21 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     authentication_classes = (TokenAuthentication,)
     permission_classes = (UpdatingProfilePermission,)
+
+
+class UserHistoryViewset(viewsets.ModelViewSet):
+    serializer_class = UserHistorySerializer
+    queryset = UserHistory.objects.all()
+    # TODO: check authentication
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        qs = list(UserHistory.objects.filter(user=self.request.user).values())
+
+        return Response(qs, status=status.HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+        return Response({"Message: Nothing to post"}, status=status.HTTP_201_CREATED)
 
 
 # class LoginView(GenericAPIView):

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import UserProfile
+from .models import UserProfile, UserHistory
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -21,8 +21,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return user
 
 
-# class UserhistorySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Userhistory
-#         fields = ("id", "user_profile", "housemodel", "carmodel", "used")
-#         extra_kwargs = {'user_profile': {"read_only": True}}
+class UserhistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserHistory
+        fields = ("id", "user_profile", "housemodel", "carmodel", "used")
+        extra_kwargs = {'user_profile': {"read_only": True}}

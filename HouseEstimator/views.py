@@ -2,6 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .models import House
 from .serializers import HouseSerializer
+from User.models import UserHistory
 import pickle
 import numpy as np
 from rest_framework.permissions import IsAuthenticated
@@ -26,8 +27,9 @@ class Houseview(viewsets.ModelViewSet):
         serializer = HouseSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        headers = self.get_success_headers(serializer.data)
 
+        headers = self.get_success_headers(serializer.data)
+        user = request.user
         area = serializer.data.get("area")
         room = serializer.data.get("room")
         year = serializer.data.get("year")
@@ -47,7 +49,9 @@ class Houseview(viewsets.ModelViewSet):
             "price": price,
             "houses": len(qs),
         }
-
+        history_data = f"area: {area}, room: {room}, year: {year}, location: {location}"
+        history = UserHistory(user=user, model="house", data=history_data, price=price)
+        history.save()
         return Response(data, status=status.HTTP_201_CREATED, headers=headers)
 
     # house = House(area=area, location=location, room=room, year=year, price=price)

@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 """
 Django settings for MachineLearningEstimator project.
 
@@ -73,7 +75,9 @@ INSTALLED_APPS = [
     'HouseEstimator',
     'SimCardEstimator',
     'User',
-    'corsheaders'
+    'corsheaders',
+    # stackifyapm
+    # 'stackifyapm.contrib.django',
 ]
 
 SWAGGER_SETTINGS = {
@@ -96,6 +100,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    # stackifyapm
+    # 'stackifyapm.contrib.django.middleware.TracingMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -153,6 +159,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=120),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=120),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -178,3 +192,6 @@ JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'User.UserProfile'
+
+APPLICATION_NAME = 'Python Application'
+ENVIRONMENT = 'Production'
