@@ -33,6 +33,8 @@ class UserSignup(APIView):
             # new_user = UserProfile.objects.create_user(email=data['snn'], password=pass_)
             refresh = RefreshToken.for_user(user)
             return Response(data={
+                "name": data['name'],
+                "email": data['email'],
                 "access": str(refresh.access_token),
                 "refresh": str(refresh),
                 "message": "User successfuly inserted!"
