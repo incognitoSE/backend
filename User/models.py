@@ -53,4 +53,4 @@ class UserHistory(models.Model):
     model = models.CharField(max_length=15)
     data = models.CharField(max_length=150)
     price = models.IntegerField()
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.CharField(max_length=40)

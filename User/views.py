@@ -1,18 +1,13 @@
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.generics import GenericAPIView
 from rest_framework import viewsets
-from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authentication import TokenAuthentication
-from django.contrib import auth
-import jwt
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UserProfileSerializer, UserhistorySerializer
 from .models import UserProfile, UserHistory
 from .permissions import UpdatingProfilePermission
-from django.conf import settings
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -25,8 +20,8 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 class UserSignup (APIView):
     serializer_class = UserProfileSerializer
     queryset = UserProfile.objects.all()
-    
-    def post (self, *args, **kwargs):
+
+    def post(self, *args, **kwargs):
         data = self.request.data
         try:
             user = UserProfile(
