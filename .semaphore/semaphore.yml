@@ -58,3 +58,5 @@ blocks:
         always:
           commands:
             - rm HouseEstimator/Model/houseestimator.pkl
+    skip:
+      when: branch = 'master'
