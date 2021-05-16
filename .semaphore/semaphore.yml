@@ -60,7 +60,7 @@ blocks:
       jobs:
         - name: unzip
           commands:
-            - unzip -u HouseEstimator/Model/houseestimator.zip -d HouseEstimator/Model
+            - unzip -u ./HouseEstimator/Model/houseestimator.zip -d ./HouseEstimator/Model
   - name: Remove unzipped file
     dependencies:
       - Test
