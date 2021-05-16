@@ -36,10 +36,10 @@ blocks:
       secrets:
         - name: dockerhub
     dependencies:
-      - Remove unzipped file
+      - Test
   - name: Test
     dependencies:
-      - Unzip Pickle
+      - Initialize
     task:
       prologue:
         commands:
@@ -47,25 +47,14 @@ blocks:
           - checkout
           - cache restore
           - pip install --cache-dir .pip_cache -r requirements.txt
+          - unzip -u HouseEstimator/Model/houseestimator.zip -d HouseEstimator/Model
       jobs:
         - name: Unit Tests
           commands:
             - python manage.py makemigrations
             - python manage.py migrate
             - python manage.py test
-  - name: Unzip Pickle
-    dependencies:
-      - Initialize
-    task:
-      jobs:
-        - name: unzip
-          commands:
-            - unzip -u ./HouseEstimator/Model/houseestimator.zip -d ./HouseEstimator/Model
-  - name: Remove unzipped file
-    dependencies:
-      - Test
-    task:
-      jobs:
-        - name: remove file
+      epilogue:
+        always:
           commands:
             - rm HouseEstimator/Model/houseestimator.pkl
