@@ -9,8 +9,12 @@ from datetime import date
 import jdatetime
 import numpy as np
 from rest_framework.permissions import IsAuthenticated
+from zipfile import ZipFile
+import os
 
 
+if not os.path.exists('HouseEstimator/Model/houseestimator.pkl'):
+    ZipFile("HouseEstimator/Model/houseestimator.zip", 'r').extractall(os.path.join("HouseEstimator", "Model"))
 with open('HouseEstimator/Model/lableencoder.pkl', 'rb') as file:
     L_encoder = pickle.load(file)
 
