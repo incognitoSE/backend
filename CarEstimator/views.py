@@ -78,7 +78,7 @@ class CarView(viewsets.ModelViewSet):
         model_ = L_encoder.transform(list(model))[0]
 
         body_status_ = body_status_dict[body_status]
-        
+
         price = pickled_model.predict(np.array([brand_, model_, mileage, year, body_status_]).reshape(1, -1))
 
         qs = list(Car.objects.filter(brand=brand).values())
