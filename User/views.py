@@ -5,8 +5,8 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
-from .serializers import UserProfileSerializer, UserhistorySerializer
-from .models import UserProfile, UserHistory
+from .serializers import UserProfileSerializer, UserhistorySerializer, UserWalletSerializer
+from .models import UserProfile, UserHistory, UserWallet
 from .permissions import UpdatingProfilePermission
 
 
@@ -30,6 +30,8 @@ class UserSignup(APIView):
                     )
             user.set_password(data['password'])
             user.save()
+            wallet = UserWallet(user=user)
+            wallet.save()
             # new_user = UserProfile.objects.create_user(email=data['snn'], password=pass_)
             refresh = RefreshToken.for_user(user)
             return Response(data={
@@ -53,11 +55,34 @@ class UserHistoryViewset(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         qs = list(UserHistory.objects.filter(user=self.request.user).values())
-
         return Response(qs, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         return Response({"Message: Nothing to post"}, status=status.HTTP_201_CREATED)
+
+
+class UserWalletViewset(viewsets.ModelViewSet):
+    serializer_class = UserWalletSerializer
+    queryset = UserWallet.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        return Response(f"{self.request.user}", status=status.HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+
+        user_wallet = UserWallet.objects.get(user=request.user)
+        serializer = UserWalletSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        headers = self.get_success_headers(serializer.data)
+        amount = serializer.data.get("amount")
+
+        user_wallet.amount += amount
+        user_wallet.save()
+        return Response({"massage": f"{amount} charged"}, status=status.HTTP_200_OK, headers=headers)
 
 
 # class LoginView(GenericAPIView):

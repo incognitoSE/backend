@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import UserProfile, UserHistory
+from .models import UserProfile, UserHistory, UserWallet
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -25,4 +25,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class UserhistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = UserHistory
-        fields = ("id", "user", "data", "price", "date")
+        fields = ("id", "data", "price", "date")
+
+
+class UserWalletSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserWallet
+        fields = ("id", "amount")

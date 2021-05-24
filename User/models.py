@@ -54,3 +54,9 @@ class UserHistory(models.Model):
     data = models.CharField(max_length=150)
     price = models.IntegerField()
     date = models.CharField(max_length=40)
+
+
+class UserWallet(models.Model):
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
+    amount = models.IntegerField(default=0)
+    trial = models.IntegerField(default=2)

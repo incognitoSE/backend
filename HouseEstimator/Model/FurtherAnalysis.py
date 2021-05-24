@@ -85,18 +85,22 @@ allyears = sorted(set(df_house['year'][(1370 < df_house['year']) & (df_house['ye
 # plt.show()
 
 
-# pricelist2 = [(df_house['price'][df_house['year'] == _class].mean()/1000000000, _class) for _class in allyears]
-#
-# pricesince = []
-# yearsince = []
-#
-# for _tuple in pricelist2:
+pricelist2 = [(df_house['price'][df_house['year'] == _class].mean()/1000000000, _class) for _class in allyears]
+plist = df_house.groupby('year')["price"].mean().tolist()
+
+
+pricesince = []
+yearsince = []
+print(plist)
+years = df_house["year"].unique()
+print(years)
+# for _tuple in plist:
 #     pricesince.append(_tuple[0])
 #     yearsince.append(_tuple[1])
-#
-# plt.figure()
-# plt.title("price changes since 1370 with their average")
-# plt.plot(yearsince, pricesince, c='g')
-# plt.xlabel('year')
-# plt.ylabel('for real price multiply to 1000000000')
-# plt.show()
+
+plt.figure()
+plt.title("price changes since 1370 with their average")
+plt.plot(years, plist, c='g')
+plt.xlabel('year')
+plt.ylabel('for real price multiply to 1000000000')
+plt.show()

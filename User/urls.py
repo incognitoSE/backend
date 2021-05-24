@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import UserProfileViewSet, UserHistoryViewset, UserProfile, UserSignup
+from .views import UserProfileViewSet, UserHistoryViewset, UserProfile, UserSignup, UserWalletViewset
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -10,6 +10,7 @@ from rest_framework_simplejwt.views import (
 router = routers.DefaultRouter()
 # router.register('profile', UserProfileViewSet, basename="registraton")
 router.register('userhistory', UserHistoryViewset, basename="userhistory")
+router.register('userwallet', UserWalletViewset, basename="userwallet")
 
 
 urlpatterns = [

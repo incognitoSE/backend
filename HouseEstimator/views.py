@@ -2,14 +2,18 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .models import House
 from .serializers import HouseSerializer
-from User.models import UserHistory
+from User.models import UserHistory, UserWallet
 import pickle
+import zipfile
 from datetime import datetime
 from datetime import date
 import jdatetime
 import numpy as np
 from rest_framework.permissions import IsAuthenticated
 
+
+with zipfile.ZipFile("HouseEstimator/Model/houseestimator.zip", "r") as zip_ref:
+    zip_ref.extractall("HouseEstimator/Model")
 
 with open('HouseEstimator/Model/lableencoder.pkl', 'rb') as file:
     L_encoder = pickle.load(file)
@@ -31,8 +35,15 @@ class Houseview(viewsets.ModelViewSet):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        headers = self.get_success_headers(serializer.data)
         user = request.user
+        user_wallet = UserWallet.objects.get(user=user)
+
+        if user_wallet.trial <= 0:
+            if user_wallet.amount < 300:
+                return Response({"massage": "please charge your account for using services"},
+                                status=status.HTTP_402_PAYMENT_REQUIRED)
+
+        headers = self.get_success_headers(serializer.data)
         area = serializer.data.get("area")
         room = serializer.data.get("room")
         year = serializer.data.get("year")
@@ -53,7 +64,6 @@ class Houseview(viewsets.ModelViewSet):
             "houses": qs,
         }
         now = datetime.now()
-        today = date.today()
         current_time = now.strftime("%H:%M:%S")
         # date_ = today.strftime("%d/%m/%Y")
         # jdate = jdatetime.datetime.now()
@@ -62,6 +72,11 @@ class Houseview(viewsets.ModelViewSet):
         history_data = f"area: {area}, room: {room}, year: {year}, location: {location}"
         history = UserHistory(user=user, model="house", data=history_data, price=price, date=time)
         history.save()
+        if user_wallet.trial > 0:
+            user_wallet.trial -= 1
+        else:
+            user_wallet.amount -= 300
+        user_wallet.save()
         return Response(data, status=status.HTTP_201_CREATED, headers=headers)
 
     # house = House(area=area, location=location, room=room, year=year, price=price)
