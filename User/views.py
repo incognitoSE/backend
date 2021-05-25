@@ -5,9 +5,11 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
-from .serializers import UserProfileSerializer, UserhistorySerializer, UserWalletSerializer
-from .models import UserProfile, UserHistory, UserWallet
+from .serializers import UserProfileSerializer, UserhistorySerializer, UserWalletSerializer, UserTransactionsSerializer
+from .models import UserProfile, UserHistory, UserWallet, UserTransactions
 from .permissions import UpdatingProfilePermission
+import jdatetime
+from datetime import datetime
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -61,6 +63,19 @@ class UserHistoryViewset(viewsets.ModelViewSet):
         return Response({"Message: Nothing to post"}, status=status.HTTP_201_CREATED)
 
 
+class UserTransactionsViewset(viewsets.ModelViewSet):
+    serializer_class = UserTransactionsSerializer
+    queryset = UserTransactions.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        qs = list(UserTransactions.objects.filter(user=self.request.user).values())
+        return Response(qs, status=status.HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+        return Response({"Message: Nothing to post"}, status=status.HTTP_201_CREATED)
+
+
 class UserWalletViewset(viewsets.ModelViewSet):
     serializer_class = UserWalletSerializer
     queryset = UserWallet.objects.all()
@@ -72,6 +87,7 @@ class UserWalletViewset(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
 
         user_wallet = UserWallet.objects.get(user=request.user)
+        user = request.user
         serializer = UserWalletSerializer(data=request.data)
 
         if not serializer.is_valid():
@@ -82,6 +98,14 @@ class UserWalletViewset(viewsets.ModelViewSet):
 
         user_wallet.amount += amount
         user_wallet.save()
+
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        date_time = jdatetime.datetime.now().strftime("%d/%m/%Y")
+        time = f"{date_time}  {current_time}"
+        transaction = UserTransactions(user=user, type="افزایش اعتبار", amount=amount, date=time)
+        transaction.save()
+
         return Response({"massage": f"{amount} charged"}, status=status.HTTP_200_OK, headers=headers)
 
 

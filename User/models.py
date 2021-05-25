@@ -56,6 +56,15 @@ class UserHistory(models.Model):
     date = models.CharField(max_length=40)
 
 
+class UserTransactions(models.Model):
+    TYPE_CHOICES = (("ch", "افزایش اعتبار"), ("se", "استفاده از سرویس"))
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    type = models.CharField(max_length=100, choices=TYPE_CHOICES)
+    service = models.CharField(max_length=150, default="-")
+    amount = models.IntegerField()
+    date = models.CharField(max_length=40)
+
+
 class UserWallet(models.Model):
     user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
     amount = models.IntegerField(default=0)

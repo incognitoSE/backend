@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .models import House
 from .serializers import HouseSerializer
-from User.models import UserHistory, UserWallet
+from User.models import UserHistory, UserWallet, UserTransactions
 import pickle
 import zipfile
 from datetime import datetime
@@ -63,20 +63,25 @@ class Houseview(viewsets.ModelViewSet):
             "price": price,
             "houses": qs,
         }
-        now = datetime.now()
-        current_time = now.strftime("%H:%M:%S")
         # date_ = today.strftime("%d/%m/%Y")
         # jdate = jdatetime.datetime.now()
-        date_time = jdatetime.datetime.now().strftime("%d %b %Y")
-        time = f"{date_time} at {current_time}"
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        date_time = jdatetime.datetime.now().strftime("%d/%m/%Y")
+        time = f"{date_time}  {current_time}"
         history_data = f"area: {area}, room: {room}, year: {year}, location: {location}"
-        history = UserHistory(user=user, model="house", data=history_data, price=price, date=time)
+        history = UserHistory(user=user, model="سرویس خانه", data=history_data, price=price, date=time)
         history.save()
         if user_wallet.trial > 0:
             user_wallet.trial -= 1
         else:
             user_wallet.amount -= 300
         user_wallet.save()
+
+        transaction = UserTransactions(user=user, type="استفاده از سرویس",
+                                       service="تخمین قیمت خانه", amount=300, date=time)
+        transaction.save()
+
         return Response(data, status=status.HTTP_201_CREATED, headers=headers)
 
     # house = House(area=area, location=location, room=room, year=year, price=price)
