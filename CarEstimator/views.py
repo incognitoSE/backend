@@ -5,8 +5,9 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import CarSerializer
 import pickle
 import zipfile
-from User.models import UserHistory, UserWallet
+from User.models import UserHistory, UserWallet, UserTransactions
 import jdatetime
+from datetime import datetime
 import numpy as np
 
 
@@ -41,6 +42,27 @@ body_status_dict = {
      "اوراقی": 18
 }
 
+body_status_rev_dict = {
+     "1": "بدون رنگ",
+     "14": "صافکاری بدون رنگ",
+     "2": "یک لکه رنگ",
+     "3": "دو لکه رنگ",
+     "4": "چند لکه رنگ",
+     "5": "گلگیر لکه رنگ",
+     "6": "گلگیر تعویض",
+     "7": "یک درب رنگ",
+     "8": "دو درب رنگ",
+     "9": "درب تعویض",
+     "10": "کاپوت رنگ",
+     "11": "کاپوت تعویض",
+     "12": "دور رنگ",
+     "13": "کامل رنگ",
+     "15": "تصادفی",
+     "16": "اتاق تعویض",
+     "17": "سوخته",
+     "18": "اوراقی"
+}
+
 
 class CarView(viewsets.ModelViewSet):
     serializer_class = CarSerializer
@@ -56,13 +78,13 @@ class CarView(viewsets.ModelViewSet):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        # user = request.user
-        # user_wallet = UserWallet.objects.get(user=user)
+        user = request.user
+        user_wallet = UserWallet.objects.get(user=user)
 
-        # if user_wallet.trial <= 0:
-        #     if user_wallet.amount < 300:
-        #         return Response({"massage": "please charge your account for using services"},
-        #                         status=status.HTTP_402_PAYMENT_REQUIRED)
+        if user_wallet.trial <= 0:
+            if user_wallet.amount < 300:
+                return Response({"massage": "please charge your account for using services"},
+                                status=status.HTTP_402_PAYMENT_REQUIRED)
 
         headers = self.get_success_headers(serializer.data)
         brand = serializer.data.get("brand")
@@ -83,11 +105,31 @@ class CarView(viewsets.ModelViewSet):
 
         qs = list(Car.objects.filter(brand=brand).values())
 
+        for element in qs:
+            element['body_status'] = body_status_rev_dict[element['body_status']]
+
         data = {
             "currentcar": serializer.data,
             "price": price,
             "cars": qs,
         }
+
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        date_time = jdatetime.datetime.now().strftime("%d/%m/%Y")
+        time = f"{date_time}  {current_time}"
+        history_data = f"brand: {brand}, model: {model}, mileage: {mileage}, year: {year}, body_status: {body_status}"
+        history = UserHistory(user=user, model="سرویس ماشین", data=history_data, price=price, date=time)
+        history.save()
+        if user_wallet.trial > 0:
+            user_wallet.trial -= 1
+        else:
+            user_wallet.amount -= 300
+        user_wallet.save()
+
+        transaction = UserTransactions(user=user, type="استفاده از سرویس",
+                                       service="تخمین قیمت ماشین", amount=300, date=time)
+        transaction.save()
 
         return Response(data, status=status.HTTP_201_CREATED, headers=headers)
 
