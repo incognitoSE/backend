@@ -5,8 +5,9 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
-from .serializers import UserProfileSerializer, UserhistorySerializer, UserWalletSerializer, UserTransactionsSerializer
-from .models import UserProfile, UserHistory, UserWallet, UserTransactions
+from .serializers import UserProfileSerializer, UserhistorySerializer, UserWalletSerializer\
+    , UserTransactionsSerializer, NotificationsSerializer
+from .models import UserProfile, UserHistory, UserWallet, UserTransactions, Notifications
 from .permissions import UpdatingProfilePermission
 import jdatetime
 from datetime import datetime
@@ -82,12 +83,16 @@ class UserWalletViewset(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
-        return Response(f"{self.request.user}", status=status.HTTP_200_OK)
+        user_wallet = UserWallet.objects.get(user=request.user)
+        data = {
+            "current_amount": user_wallet.amount
+        }
+        return Response(data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
 
-        user_wallet = UserWallet.objects.get(user=request.user)
         user = request.user
+        user_wallet = UserWallet.objects.get(user=user)
         serializer = UserWalletSerializer(data=request.data)
 
         if not serializer.is_valid():
@@ -106,7 +111,23 @@ class UserWalletViewset(viewsets.ModelViewSet):
         transaction = UserTransactions(user=user, type="افزایش اعتبار", amount=amount, date=time)
         transaction.save()
 
-        return Response({"massage": f"{amount} charged"}, status=status.HTTP_200_OK, headers=headers)
+        data = {
+            "message": f"{amount} charged",
+            "current_amount": user_wallet.amount
+        }
+        return Response(data, status=status.HTTP_200_OK, headers=headers)
+
+
+class NotificationsViewset(viewsets.ModelViewSet):
+    serializer_class = NotificationsSerializer
+    queryset = Notifications.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        qs = list(Notifications.objects.all().values())
+        return Response(qs, status=status.HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+        return Response({"Message: Nothing to post"}, status=status.HTTP_201_CREATED)
 
 
 # class LoginView(GenericAPIView):

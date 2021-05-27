@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from datetime import datetime, timedelta
 from django.conf import settings
+import jdatetime
 
 
 class UserProfileManager(BaseUserManager):
@@ -69,3 +70,8 @@ class UserWallet(models.Model):
     user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
     amount = models.IntegerField(default=0)
     trial = models.IntegerField(default=2)
+
+
+class Notifications(models.Model):
+    text = models.TextField()
+    date = models.CharField(max_length=50, default=jdatetime.datetime.now().strftime("%d/%m/%Y"))

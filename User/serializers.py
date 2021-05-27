@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import UserProfile, UserHistory, UserWallet, UserTransactions
+from .models import UserProfile, UserHistory, UserWallet, UserTransactions, Notifications
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -38,3 +38,9 @@ class UserTransactionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserTransactions
         fields = ("id", "type", "service", "amount", "date")
+
+
+class NotificationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notifications
+        fields = ("id", "text", "date")
