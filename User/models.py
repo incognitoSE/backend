@@ -75,3 +75,6 @@ class UserWallet(models.Model):
 class Notifications(models.Model):
     text = models.TextField()
     date = models.CharField(max_length=50, default=jdatetime.datetime.now().strftime("%d/%m/%Y"))
+
+    def __str__(self):
+        return f"{self.date}"

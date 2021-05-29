@@ -121,6 +121,7 @@ class UserWalletViewset(viewsets.ModelViewSet):
 class NotificationsViewset(viewsets.ModelViewSet):
     serializer_class = NotificationsSerializer
     queryset = Notifications.objects.all()
+    permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
         qs = list(Notifications.objects.all().values())
