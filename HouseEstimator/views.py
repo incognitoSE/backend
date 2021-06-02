@@ -10,7 +10,9 @@ from datetime import date
 import jdatetime
 import numpy as np
 from rest_framework.permissions import IsAuthenticated
+import base64
 
+images = []
 
 with zipfile.ZipFile("HouseEstimator/Model/houseestimator.zip", "r") as zip_ref:
     zip_ref.extractall("HouseEstimator/Model")
@@ -21,6 +23,11 @@ with open('HouseEstimator/Model/lableencoder.pkl', 'rb') as file:
 with open('HouseEstimator/Model/houseestimator.pkl', 'rb') as file:
     pickled_model = pickle.load(file)
 
+with open('HouseEstimator/Model/Screenshot from 2021-06-02 14-25-00.png', "rb") as f:
+    # images.append(f.read().decode('utf8', 'ignore'))
+    images.append(base64.b64encode(f.read()))
+    # img = f"{bytes(f.read())}"
+
 
 class Houseview(viewsets.ModelViewSet):
     serializer_class = HouseSerializer
@@ -28,7 +35,12 @@ class Houseview(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
-        return Response({"area": "", "room": "", "year": "", "location": ""}, status=status.HTTP_200_OK)
+        data = {
+            "images": images
+        }
+        return Response(data, status=status.HTTP_200_OK)
+
+        # return Response({"area": "", "room": "", "year": "", "location": ""}, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         serializer = HouseSerializer(data=request.data)
