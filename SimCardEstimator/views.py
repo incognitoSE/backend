@@ -12,11 +12,15 @@ import base64
 images = []
 
 
-def yesorno(exp):
-    if exp:
-        return 'بله'
-    else:
-        return 'خیر'
+yesorno = {
+    'بله': 1,
+    'خیر': 0
+}
+
+yesorno_rev = {
+    1: 'بله',
+    0: 'خیر'
+}
 
 
 with open('SimCardEstimator/Model/Screenshot from 2021-06-02 14-25-00.png', "rb") as f:
@@ -60,24 +64,16 @@ class SimcardView(viewsets.ModelViewSet):
         stock = serializer.data.get("stock")
         daemi = serializer.data.get("daemi")
 
-        qs = list(Simcard.objects.filter(rond=rond, daemi=daemi).values())
+        qs = list(Simcard.objects.filter(rond=yesorno[rond], daemi=yesorno[daemi]).values())
         for element in qs:
-            element['rond'] = yesorno(rond)
-            element['stock'] = yesorno(stock)
-            element['daemi'] = yesorno(daemi)
+            element['rond'] = yesorno_rev[element['rond']]
+            element['stock'] = yesorno_rev[element['stock']]
+            element['daemi'] = yesorno_rev[element['daemi']]
 
         # TODO: price is fake
         price = 15000
-        d = yesorno(daemi)
-        s = yesorno(stock)
-        r = yesorno(rond)
         data = {
-            "currentsimcard": {
-                "number": number,
-                "rond": r,
-                "stock": s,
-                "daemi": d
-            },
+            "currentsimcard": serializer.data,
             "price": price,
             "simcards": qs,
         }
@@ -87,7 +83,7 @@ class SimcardView(viewsets.ModelViewSet):
         date_time = jdatetime.datetime.now().strftime("%d/%m/%Y")
         time = f"{date_time}  {current_time}"
 
-        history_data = f"number: {number}, rond: {yesorno(rond)}, stock: {yesorno(stock)}, daemi: {yesorno(daemi)}"
+        history_data = f"number: {number}, rond: {rond}, stock: {stock}, daemi: {daemi}"
         history = UserHistory(user=user, model="سرویس سیم‌کارت", data=history_data, price=price, date=time)
         history.save()
 

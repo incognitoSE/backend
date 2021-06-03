@@ -4,7 +4,7 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
-from .serializers import UserProfileSerializer, UserhistorySerializer, UserWalletSerializer \
+from .serializers import UserProfileSerializer, UserhistorySerializer, UserWalletSerializer\
     , UserTransactionsSerializer, NotificationsSerializer, UserPasswordSerializer
 from .models import UserProfile, UserHistory, UserWallet, UserTransactions, Notifications
 from .permissions import UpdatingProfilePermission
