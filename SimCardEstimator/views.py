@@ -11,11 +11,13 @@ import base64
 
 images = []
 
+
 def yesorno(exp):
     if exp:
         return 'بله'
     else:
         return 'خیر'
+
 
 with open('SimCardEstimator/Model/Screenshot from 2021-06-02 14-25-00.png', "rb") as f:
     # images.append(f.read().decode('utf8', 'ignore'))
@@ -63,7 +65,6 @@ class SimcardView(viewsets.ModelViewSet):
             element['rond'] = yesorno(rond)
             element['stock'] = yesorno(stock)
             element['daemi'] = yesorno(daemi)
-
 
         # TODO: price is fake
         price = 15000
