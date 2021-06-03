@@ -65,11 +65,18 @@ class SimcardView(viewsets.ModelViewSet):
             element['daemi'] = yesorno(daemi)
 
 
-
         # TODO: price is fake
         price = 15000
+        d = yesorno(daemi)
+        s = yesorno(stock)
+        r = yesorno(rond)
         data = {
-            "currentsimcard": serializer.data,
+            "currentsimcard": {
+                "number": number,
+                "rond": r,
+                "stock": s,
+                "daemi": d
+            },
             "price": price,
             "simcards": qs,
         }
