@@ -5,19 +5,12 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
-from .serializers import UserProfileSerializer, UserhistorySerializer, UserWalletSerializer\
-    , UserTransactionsSerializer, NotificationsSerializer
+from .serializers import UserProfileSerializer, UserhistorySerializer, UserWalletSerializer \
+    , UserTransactionsSerializer, NotificationsSerializer, UserPasswordSerializer
 from .models import UserProfile, UserHistory, UserWallet, UserTransactions, Notifications
 from .permissions import UpdatingProfilePermission
 import jdatetime
 from datetime import datetime
-
-
-class UserProfileViewSet(viewsets.ModelViewSet):
-    serializer_class = UserProfileSerializer
-    queryset = UserProfile.objects.all()
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (UpdatingProfilePermission,)
 
 
 class UserSignup(APIView):
@@ -28,9 +21,9 @@ class UserSignup(APIView):
         data = self.request.data
         try:
             user = UserProfile(
-                        email=data['email'],
-                        name=data['name']
-                    )
+                email=data['email'],
+                name=data['name']
+            )
             user.set_password(data['password'])
             user.save()
             wallet = UserWallet(user=user)
@@ -42,13 +35,13 @@ class UserSignup(APIView):
                 "email": data['email'],
                 "access": str(refresh.access_token),
                 "refresh": str(refresh),
-                "message": "User successfuly inserted!"
+                "message": "User successfuly registerd :)"
             }, status=status.HTTP_201_CREATED)
 
         except Exception as exc:
             return Response(data={
                 "message": str(exc)
-                }, status=status.HTTP_400_BAD_REQUEST)
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserHistoryViewset(viewsets.ModelViewSet):
@@ -90,7 +83,6 @@ class UserWalletViewset(viewsets.ModelViewSet):
         return Response(data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
-
         user = request.user
         user_wallet = UserWallet.objects.get(user=user)
         serializer = UserWalletSerializer(data=request.data)
@@ -128,7 +120,52 @@ class NotificationsViewset(viewsets.ModelViewSet):
         return Response(qs, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
-        return Response({"Message: Nothing to post"}, status=status.HTTP_201_CREATED)
+        return Response({"Message": "Nothing to post"}, status=status.HTTP_201_CREATED)
+
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = UserPasswordSerializer
+    queryset = UserProfile.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        data = {
+            "message": "Nothing"
+        }
+
+        return Response(data, status=status.HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+        # user = request.user
+        # serializer = UserPasswordSerializer(data=request.data)
+        #
+        # if serializer.is_valid():
+        #     if not user.check_password(serializer.data.get('old_password')):
+        #         return Response({'old_password': ['Wrong password.']},
+        #                         status=status.HTTP_400_BAD_REQUEST)
+        #
+        #     user.set_password(serializer.data.get('new_password'))
+        #     user.save()
+        #     return Response({'status': 'password set'}, status=status.HTTP_200_OK)
+        #
+        # return Response(serializer.errors,
+        #                 status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = UserPasswordSerializer(data=request.data)
+        user = UserProfile.objects.get(id=request.user.id)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        headers = self.get_success_headers(serializer.data)
+
+        user.set_password(serializer.data.get("password"))
+
+        user.save()
+
+        data = {
+            "message": "password changed successfully"
+        }
+        return Response(data, status=status.HTTP_200_OK, headers=headers)
 
 
 # class LoginView(GenericAPIView):

@@ -1,3 +1,5 @@
+from abc import ABC
+
 from rest_framework import serializers
 from .models import UserProfile, UserHistory, UserWallet, UserTransactions, Notifications
 
@@ -44,3 +46,9 @@ class NotificationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notifications
         fields = ("id", "text", "date")
+
+
+class UserPasswordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ('id', 'password')
