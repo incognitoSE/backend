@@ -28,6 +28,11 @@ with open('HouseEstimator/Model/Screenshot from 2021-06-02 14-25-00.png', "rb") 
     images.append(base64.b64encode(f.read()))
     # img = f"{bytes(f.read())}"
 
+with open('HouseEstimator/Model/Screenshot from 2021-05-29 20-36-49.png', "rb") as f:
+    # images.append(f.read().decode('utf8', 'ignore'))
+    images.append(base64.b64encode(f.read()))
+    # img = f"{bytes(f.read())}"
+
 
 class Houseview(viewsets.ModelViewSet):
     serializer_class = HouseSerializer

@@ -9,6 +9,7 @@ from User.models import UserHistory, UserWallet, UserTransactions
 import jdatetime
 from datetime import datetime
 import numpy as np
+import base64
 
 
 with zipfile.ZipFile("CarEstimator/Model/carestimator.zip", "r") as zip_ref:
@@ -19,6 +20,18 @@ with open('CarEstimator/Model/car_lableencoder.pkl', 'rb') as file:
 
 with open('CarEstimator/Model/carestimator.pkl', 'rb') as file:
     pickled_model = pickle.load(file)
+
+images = []
+
+with open('CarEstimator/Model/Screenshot from 2021-06-02 14-25-00.png', "rb") as f:
+    # images.append(f.read().decode('utf8', 'ignore'))
+    images.append(base64.b64encode(f.read()))
+    # img = f"{bytes(f.read())}"
+
+with open('CarEstimator/Model/Screenshot from 2021-05-29 20-36-49.png', "rb") as f:
+    # images.append(f.read().decode('utf8', 'ignore'))
+    images.append(base64.b64encode(f.read()))
+    # img = f"{bytes(f.read())}"
 
 
 body_status_dict = {
@@ -70,7 +83,10 @@ class CarView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
-        return Response({"Message": "Every thing is Ok"}, status=status.HTTP_200_OK)
+        data = {
+            "images": images
+        }
+        return Response(data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         serializer = CarSerializer(data=request.data)
