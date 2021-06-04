@@ -171,7 +171,7 @@ class CarView(viewsets.ModelViewSet):
 
         if boolean:
             transaction = UserTransactions(user=user, type="استفاده از سرویس",
-                                           service="تخمین قیمت ماشین", amount="رایگان", date=time)
+                                           service="تخمین قیمت ماشین", amount=0, date=time)
             transaction.save()
 
         else:

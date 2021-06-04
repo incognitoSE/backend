@@ -141,7 +141,7 @@ class SimcardView(viewsets.ModelViewSet):
 
         if boolean:
             transaction = UserTransactions(user=user, type="استفاده از سرویس",
-                                           service="تخمین قیمت سیم‌کارت", amount="رایگان", date=time)
+                                           service="تخمین قیمت سیم‌کارت", amount=0, date=time)
             transaction.save()
 
         else:

@@ -132,7 +132,7 @@ class Houseview(viewsets.ModelViewSet):
 
         if boolean:
             transaction = UserTransactions(user=user, type="استفاده از سرویس",
-                                           service="تخمین قیمت خانه", amount="رایگان", date=time)
+                                           service="تخمین قیمت خانه", amount=0, date=time)
             transaction.save()
 
         else:
