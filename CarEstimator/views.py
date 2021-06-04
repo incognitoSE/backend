@@ -108,7 +108,7 @@ class CarView(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = CarSerializer(data=request.data)
-
+        boolean = True
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -116,6 +116,7 @@ class CarView(viewsets.ModelViewSet):
         user_wallet = UserWallet.objects.get(user=user)
 
         if user_wallet.trial <= 0:
+            boolean = False
             if user_wallet.amount < 300:
                 return Response({"massage": "please charge your account for using services"},
                                 status=status.HTTP_402_PAYMENT_REQUIRED)
@@ -136,6 +137,7 @@ class CarView(viewsets.ModelViewSet):
         body_status_ = body_status_dict[body_status]
 
         price = pickled_model.predict(np.array([brand_, model_, mileage, year, body_status_]).reshape(1, -1))
+        price = int(price[0])
 
         qs = list(Car.objects.filter(brand=brand,
                                      model=model,
@@ -167,9 +169,15 @@ class CarView(viewsets.ModelViewSet):
             user_wallet.amount -= 300
         user_wallet.save()
 
-        transaction = UserTransactions(user=user, type="استفاده از سرویس",
-                                       service="تخمین قیمت ماشین", amount=300, date=time)
-        transaction.save()
+        if boolean:
+            transaction = UserTransactions(user=user, type="استفاده از سرویس",
+                                           service="تخمین قیمت ماشین", amount="رایگان", date=time)
+            transaction.save()
+
+        else:
+            transaction = UserTransactions(user=user, type="استفاده از سرویس",
+                                           service="تخمین قیمت ماشین", amount=300, date=time)
+            transaction.save()
 
         return Response(data, status=status.HTTP_201_CREATED, headers=headers)
 

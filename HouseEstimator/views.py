@@ -6,6 +6,7 @@ from User.models import UserHistory, UserWallet, UserTransactions
 import pickle
 import zipfile
 from datetime import datetime
+import pytz
 from datetime import date
 import jdatetime
 import os
@@ -81,10 +82,12 @@ class Houseview(viewsets.ModelViewSet):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+        boolean = True
         user = request.user
         user_wallet = UserWallet.objects.get(user=user)
 
         if user_wallet.trial <= 0:
+            boolean = False
             if user_wallet.amount < 300:
                 return Response({"massage": "please charge your account for using services"},
                                 status=status.HTTP_402_PAYMENT_REQUIRED)
@@ -114,7 +117,7 @@ class Houseview(viewsets.ModelViewSet):
         }
         # date_ = today.strftime("%d/%m/%Y")
         # jdate = jdatetime.datetime.now()
-        now = datetime.now()
+        now = datetime.now(pytz.timezone('Asia/Tehran'))
         current_time = now.strftime("%H:%M:%S")
         date_time = jdatetime.datetime.now().strftime("%d/%m/%Y")
         time = f"{date_time}  {current_time}"
@@ -127,9 +130,15 @@ class Houseview(viewsets.ModelViewSet):
             user_wallet.amount -= 300
         user_wallet.save()
 
-        transaction = UserTransactions(user=user, type="استفاده از سرویس",
-                                       service="تخمین قیمت خانه", amount=300, date=time)
-        transaction.save()
+        if boolean:
+            transaction = UserTransactions(user=user, type="استفاده از سرویس",
+                                           service="تخمین قیمت خانه", amount="رایگان", date=time)
+            transaction.save()
+
+        else:
+            transaction = UserTransactions(user=user, type="استفاده از سرویس",
+                                           service="تخمین قیمت خانه", amount=300, date=time)
+            transaction.save()
 
         return Response(data, status=status.HTTP_201_CREATED, headers=headers)
 

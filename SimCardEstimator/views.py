@@ -81,9 +81,11 @@ class SimcardView(viewsets.ModelViewSet):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+        boolean = True
         user = request.user
         user_wallet = UserWallet.objects.get(user=user)
         if user_wallet.trial <= 0:
+            boolean = False
             if user_wallet.amount < 300:
                 return Response({"massage": "please charge your account for using services"},
                                 status=status.HTTP_402_PAYMENT_REQUIRED)
@@ -104,6 +106,7 @@ class SimcardView(viewsets.ModelViewSet):
         daemi_ = L_encoder.transform(list(daemi))[0]
 
         price = pickled_model.predict(np.array([number, rond_, stock_, daemi_]).reshape(1, -1))
+        price = int(price[0])
 
         qs = list(Simcard.objects.filter(rond=yesorno[rond],
                                          daemi=yesorno[daemi],
@@ -136,9 +139,15 @@ class SimcardView(viewsets.ModelViewSet):
             user_wallet.amount -= 300
         user_wallet.save()
 
-        transaction = UserTransactions(user=user, type="استفاده از سرویس",
-                                       service="تخمین قیمت سیم‌کارت", amount=300, date=time)
-        transaction.save()
+        if boolean:
+            transaction = UserTransactions(user=user, type="استفاده از سرویس",
+                                           service="تخمین قیمت سیم‌کارت", amount="رایگان", date=time)
+            transaction.save()
+
+        else:
+            transaction = UserTransactions(user=user, type="استفاده از سرویس",
+                                           service="تخمین قیمت سیم‌کارت", amount=300, date=time)
+            transaction.save()
 
         return Response(data, status=status.HTTP_201_CREATED, headers=headers)
 
