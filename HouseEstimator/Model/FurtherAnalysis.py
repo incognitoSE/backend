@@ -44,12 +44,12 @@ allyears = sorted(set(df_house['year'][(1370 < df_house['year']) & (df_house['ye
 # plt.show()
 
 
-# plt.figure()
-# plt.title("Hist of location")
-# plt.hist(df_house['location'], bins=50, color='y')
-# plt.ylabel("frequncy")
-# plt.xlabel("location")
-# plt.show()
+plt.figure()
+plt.title("Hist of location")
+plt.hist(df_house['location'], bins=50, color='y')
+plt.ylabel("frequncy")
+plt.xlabel("location")
+plt.show()
 
 # plt.figure()
 # plt.title("area VS price")

@@ -9,6 +9,7 @@ from datetime import datetime
 from datetime import date
 import jdatetime
 import os
+import re
 import numpy as np
 from rest_framework.permissions import IsAuthenticated
 import base64
@@ -16,18 +17,31 @@ import base64
 
 def explore(addresss):
     type_ = ["jpg", "png"]
-    image = []
+    with open(os.path.join(addresss, 'text.txt'), 'r') as f:
+        content = f.read()
+    data = {'mainText': content,
+            'imagesAndTexts': []}
     contents = os.walk(addresss)
     for each in contents:
         for files in each[2]:
             try:
                 if files.split('.')[1].lower() in type_:
                     with open(os.path.join(each[0], files), 'rb') as f:
-                        image.append(base64.b64encode(f.read()))
+                        img = base64.b64encode(f.read())
+                        num = int(re.findall('[0-9]', files)[0])
+                        with open(os.path.join(addresss, f'text{num}.txt'), 'r') as f:
+                            cont = f.read()
+                        data['imagesAndTexts'].append(
+                            {
+                                'image': img,
+                                'text': cont
+                            }
+                        )
+
             except IndexError:
                 continue
 
-    return image
+    return data
 
 
 with zipfile.ZipFile("HouseEstimator/Model/houseestimator.zip", "r") as zip_ref:
@@ -58,10 +72,7 @@ class Houseview(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
-        data = {
-            "images": images
-        }
-        return Response(data, status=status.HTTP_200_OK)
+        return Response(images, status=status.HTTP_200_OK)
 
         # return Response({"area": "", "room": "", "year": "", "location": ""}, status=status.HTTP_200_OK)
 
