@@ -167,6 +167,18 @@ class UserProfileViewSet(viewsets.ModelViewSet):
         return Response(data, status=status.HTTP_200_OK, headers=headers)
 
 
+class UserStatsViewSet(viewsets.ModelViewSet):
+    serializer_class = UserProfileSerializer
+    queryset = UserProfile.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        data = {
+            "users": UserProfile.objects.all().count(),
+            "history": UserHistory.objects.all().count()
+        }
+
+        return Response(data, status=status.HTTP_200_OK)
+
 # class LoginView(GenericAPIView):
 #     serializer_class = AuthTokenSerializer
 #

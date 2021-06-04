@@ -23,15 +23,15 @@ with open('CarEstimator/Model/carestimator.pkl', 'rb') as file:
 
 images = []
 
-with open('CarEstimator/Model/Screenshot from 2021-06-02 14-25-00.png', "rb") as f:
-    # images.append(f.read().decode('utf8', 'ignore'))
-    images.append(base64.b64encode(f.read()))
-    # img = f"{bytes(f.read())}"
-
-with open('CarEstimator/Model/Screenshot from 2021-05-29 20-36-49.png', "rb") as f:
-    # images.append(f.read().decode('utf8', 'ignore'))
-    images.append(base64.b64encode(f.read()))
-    # img = f"{bytes(f.read())}"
+# with open('CarEstimator/Model/Screenshot from 2021-06-02 14-25-00.png', "rb") as f:
+#     # images.append(f.read().decode('utf8', 'ignore'))
+#     images.append(base64.b64encode(f.read()))
+#     # img = f"{bytes(f.read())}"
+#
+# with open('CarEstimator/Model/Screenshot from 2021-05-29 20-36-49.png', "rb") as f:
+#     # images.append(f.read().decode('utf8', 'ignore'))
+#     images.append(base64.b64encode(f.read()))
+#     # img = f"{bytes(f.read())}"
 
 
 body_status_dict = {

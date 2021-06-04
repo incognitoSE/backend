@@ -8,11 +8,27 @@ import zipfile
 from datetime import datetime
 from datetime import date
 import jdatetime
+import os
 import numpy as np
 from rest_framework.permissions import IsAuthenticated
 import base64
 
-images = []
+
+def explore(addresss):
+    type_ = ["jpg", "png"]
+    image = []
+    contents = os.walk(addresss)
+    for each in contents:
+        for files in each[2]:
+            try:
+                if files.split('.')[1].lower() in type_:
+                    with open(os.path.join(each[0], files), 'rb') as f:
+                        image.append(base64.b64encode(f.read()))
+            except IndexError:
+                continue
+
+    return image
+
 
 with zipfile.ZipFile("HouseEstimator/Model/houseestimator.zip", "r") as zip_ref:
     zip_ref.extractall("HouseEstimator/Model")
@@ -23,15 +39,17 @@ with open('HouseEstimator/Model/lableencoder.pkl', 'rb') as file:
 with open('HouseEstimator/Model/houseestimator.pkl', 'rb') as file:
     pickled_model = pickle.load(file)
 
-with open('HouseEstimator/Model/Screenshot from 2021-06-02 14-25-00.png', "rb") as f:
-    # images.append(f.read().decode('utf8', 'ignore'))
-    images.append(base64.b64encode(f.read()))
-    # img = f"{bytes(f.read())}"
+# with open('HouseEstimator/Model/Screenshot from 2021-06-02 14-25-00.png', "rb") as f:
+#     # images.append(f.read().decode('utf8', 'ignore'))
+#     images.append(base64.b64encode(f.read()))
+#     # img = f"{bytes(f.read())}"
+#
+# with open('HouseEstimator/Model/Screenshot from 2021-05-29 20-36-49.png', "rb") as f:
+#     # images.append(f.read().decode('utf8', 'ignore'))
+#     images.append(base64.b64encode(f.read()))
+#     # img = f"{bytes(f.read())}"
 
-with open('HouseEstimator/Model/Screenshot from 2021-05-29 20-36-49.png', "rb") as f:
-    # images.append(f.read().decode('utf8', 'ignore'))
-    images.append(base64.b64encode(f.read()))
-    # img = f"{bytes(f.read())}"
+images = explore('HouseEstimator/Model/')
 
 
 class Houseview(viewsets.ModelViewSet):

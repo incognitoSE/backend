@@ -2,7 +2,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path, include, re_path
 from rest_framework import routers
 from .views import UserHistoryViewset, UserProfileViewSet, UserSignup, UserWalletViewset,\
-    UserTransactionsViewset, NotificationsViewset
+    UserTransactionsViewset, NotificationsViewset, UserStatsViewSet
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -16,6 +16,7 @@ router.register('userwallet', UserWalletViewset, basename="userwallet")
 router.register("usertransactions", UserTransactionsViewset, basename="usertransactions")
 router.register("notifications", NotificationsViewset, basename="notifications")
 router.register("changepassword", UserProfileViewSet, basename="userprofile")
+router.register("stats", UserStatsViewSet, basename="userstats")
 
 
 urlpatterns = [
