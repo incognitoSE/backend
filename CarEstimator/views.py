@@ -7,9 +7,40 @@ import pickle
 import zipfile
 from User.models import UserHistory, UserWallet, UserTransactions
 import jdatetime
+import os
+import re
 from datetime import datetime
 import numpy as np
 import base64
+
+
+def explore(addresss):
+    type_ = ["jpg", "png"]
+    with open(os.path.join(addresss, 'text.txt'), 'r') as f:
+        content = f.read()
+    data = {'mainText': content,
+            'imagesAndTexts': []}
+    contents = os.walk(addresss)
+    for each in contents:
+        for files in each[2]:
+            try:
+                if files.split('.')[1].lower() in type_:
+                    with open(os.path.join(each[0], files), 'rb') as f:
+                        img = base64.b64encode(f.read())
+                        num = int(re.findall('[0-9]', files)[0])
+                        with open(os.path.join(addresss, f'text{num}.txt'), 'r') as fa:
+                            cont = fa.read()
+                        data['imagesAndTexts'].append(
+                            {
+                                'image': img,
+                                'text': cont
+                            }
+                        )
+
+            except IndexError:
+                continue
+
+    return data
 
 
 with zipfile.ZipFile("CarEstimator/Model/carestimator.zip", "r") as zip_ref:
@@ -20,18 +51,6 @@ with open('CarEstimator/Model/car_lableencoder.pkl', 'rb') as file:
 
 with open('CarEstimator/Model/carestimator.pkl', 'rb') as file:
     pickled_model = pickle.load(file)
-
-images = []
-
-# with open('CarEstimator/Model/Screenshot from 2021-06-02 14-25-00.png', "rb") as f:
-#     # images.append(f.read().decode('utf8', 'ignore'))
-#     images.append(base64.b64encode(f.read()))
-#     # img = f"{bytes(f.read())}"
-#
-# with open('CarEstimator/Model/Screenshot from 2021-05-29 20-36-49.png', "rb") as f:
-#     # images.append(f.read().decode('utf8', 'ignore'))
-#     images.append(base64.b64encode(f.read()))
-#     # img = f"{bytes(f.read())}"
 
 
 body_status_dict = {
@@ -76,6 +95,8 @@ body_status_rev_dict = {
      "18": "اوراقی"
 }
 
+images = explore('CarEstimator/Model/')
+
 
 class CarView(viewsets.ModelViewSet):
     serializer_class = CarSerializer
@@ -83,10 +104,7 @@ class CarView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
-        data = {
-            "images": images
-        }
-        return Response(data, status=status.HTTP_200_OK)
+        return Response(images, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         serializer = CarSerializer(data=request.data)
@@ -119,7 +137,13 @@ class CarView(viewsets.ModelViewSet):
 
         price = pickled_model.predict(np.array([brand_, model_, mileage, year, body_status_]).reshape(1, -1))
 
-        qs = list(Car.objects.filter(brand=brand).values())
+        qs = list(Car.objects.filter(brand=brand,
+                                     model=model,
+                                     year__gte=year - 4,
+                                     mileage__lte=mileage + 5000,
+                                     price__lte=price + 300000000,
+                                     price__gte=price - 400000000
+                                     ).values())
 
         for element in qs:
             element['body_status'] = body_status_rev_dict[element['body_status']]

@@ -13,6 +13,7 @@ venv
 MachineLearningEstimator/.env
 HouseEstimator/Model/houseestimator.pkl
 CarEstimator/Model/carestimator.pkl
+SimCardEstimator/Model/simestimator.pkl
 .vscode
 .pip_cache
 .dockerignore

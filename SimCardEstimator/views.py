@@ -5,11 +5,13 @@ from User.models import UserHistory, UserWallet, UserTransactions
 from rest_framework.permissions import IsAuthenticated
 from .serializers import SimcardSerializer
 import jdatetime
+import pickle
+import zipfile
+import os
+import re
+import numpy as np
 from datetime import datetime
 import base64
-
-
-images = []
 
 
 yesorno = {
@@ -23,15 +25,46 @@ yesorno_rev = {
 }
 
 
-# with open('SimCardEstimator/Model/Screenshot from 2021-06-02 14-25-00.png', "rb") as f:
-#     # images.append(f.read().decode('utf8', 'ignore'))
-#     images.append(base64.b64encode(f.read()))
-#     # img = f"{bytes(f.read())}"
-#
-# with open('SimCardEstimator/Model/Screenshot from 2021-05-29 20-36-49.png', "rb") as f:
-#     # images.append(f.read().decode('utf8', 'ignore'))
-#     images.append(base64.b64encode(f.read()))
-#     # img = f"{bytes(f.read())}"
+def explore(addresss):
+    type_ = ["jpg", "png"]
+    with open(os.path.join(addresss, 'text.txt'), 'r') as f:
+        content = f.read()
+    data = {'mainText': content,
+            'imagesAndTexts': []}
+    contents = os.walk(addresss)
+    for each in contents:
+        for files in each[2]:
+            try:
+                if files.split('.')[1].lower() in type_:
+                    with open(os.path.join(each[0], files), 'rb') as f:
+                        img = base64.b64encode(f.read())
+                        num = int(re.findall('[0-9]', files)[0])
+                        with open(os.path.join(addresss, f'text{num}.txt'), 'r') as fa:
+                            cont = fa.read()
+                        data['imagesAndTexts'].append(
+                            {
+                                'image': img,
+                                'text': cont
+                            }
+                        )
+
+            except IndexError:
+                continue
+
+    return data
+
+
+with zipfile.ZipFile("SimCardEstimator/Model/simestimator.zip", "r") as zip_ref:
+    zip_ref.extractall("SimCardEstimator/Model")
+
+with open('SimCardEstimator/Model/sim_lableencoder.pkl', 'rb') as file:
+    L_encoder = pickle.load(file)
+
+with open('SimCardEstimator/Model/simestimator.pkl', 'rb') as file:
+    pickled_model = pickle.load(file)
+
+
+images = explore('SimCardEstimator/Model/')
 
 
 class SimcardView(viewsets.ModelViewSet):
@@ -40,10 +73,7 @@ class SimcardView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
-        data = {
-            "images": images
-        }
-        return Response(data, status=status.HTTP_200_OK)
+        return Response(images, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         serializer = SimcardSerializer(data=request.data)
@@ -64,14 +94,27 @@ class SimcardView(viewsets.ModelViewSet):
         stock = serializer.data.get("stock")
         daemi = serializer.data.get("daemi")
 
-        qs = list(Simcard.objects.filter(rond=yesorno[rond], daemi=yesorno[daemi]).values())
+        L_encoder.fit(list(rond))
+        rond_ = L_encoder.transform(list(rond))[0]
+
+        L_encoder.fit(list(stock))
+        stock_ = L_encoder.transform(list(stock))[0]
+
+        L_encoder.fit(list(daemi))
+        daemi_ = L_encoder.transform(list(daemi))[0]
+
+        price = pickled_model.predict(np.array([number, rond_, stock_, daemi_]).reshape(1, -1))
+
+        qs = list(Simcard.objects.filter(rond=yesorno[rond],
+                                         daemi=yesorno[daemi],
+                                         price__lte=price+150000,
+                                         price__gte=price-200000).values())
+
         for element in qs:
             element['rond'] = yesorno_rev[element['rond']]
             element['stock'] = yesorno_rev[element['stock']]
             element['daemi'] = yesorno_rev[element['daemi']]
 
-        # TODO: price is fake
-        price = 15000
         data = {
             "currentsimcard": serializer.data,
             "price": price,

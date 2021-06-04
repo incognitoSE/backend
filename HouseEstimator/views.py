@@ -29,8 +29,8 @@ def explore(addresss):
                     with open(os.path.join(each[0], files), 'rb') as f:
                         img = base64.b64encode(f.read())
                         num = int(re.findall('[0-9]', files)[0])
-                        with open(os.path.join(addresss, f'text{num}.txt'), 'r') as f:
-                            cont = f.read()
+                        with open(os.path.join(addresss, f'text{num}.txt'), 'r') as fa:
+                            cont = fa.read()
                         data['imagesAndTexts'].append(
                             {
                                 'image': img,
@@ -103,7 +103,10 @@ class Houseview(viewsets.ModelViewSet):
         price = int(price[0])
         # price = 3000000000
 
-        qs = list(House.objects.filter(location=location).values())
+        qs = list(House.objects.filter(location=location,
+                                       room=room,
+                                       price__lte=price+80000000,
+                                       price__gte=price-1000000000).values())
         data = {
             "currenthouse": serializer.data,
             "price": price,
