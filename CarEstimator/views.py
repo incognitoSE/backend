@@ -8,6 +8,7 @@ import zipfile
 from User.models import UserHistory, UserWallet, UserTransactions
 import jdatetime
 import os
+import pytz
 import re
 from datetime import datetime
 import numpy as np
@@ -156,7 +157,7 @@ class CarView(viewsets.ModelViewSet):
             "cars": qs,
         }
 
-        now = datetime.now()
+        now = datetime.now(pytz.timezone('Asia/Tehran'))
         current_time = now.strftime("%H:%M:%S")
         date_time = jdatetime.datetime.now().strftime("%d/%m/%Y")
         time = f"{date_time}  {current_time}"

@@ -8,6 +8,7 @@ import jdatetime
 import pickle
 import zipfile
 import os
+import pytz
 import re
 import numpy as np
 from datetime import datetime
@@ -124,7 +125,7 @@ class SimcardView(viewsets.ModelViewSet):
             "simcards": qs,
         }
 
-        now = datetime.now()
+        now = datetime.now(pytz.timezone('Asia/Tehran'))
         current_time = now.strftime("%H:%M:%S")
         date_time = jdatetime.datetime.now().strftime("%d/%m/%Y")
         time = f"{date_time}  {current_time}"
