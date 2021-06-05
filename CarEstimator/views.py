@@ -148,7 +148,7 @@ class CarView(viewsets.ModelViewSet):
                                      price__gte=price - 400000000
                                      ).values())
 
-        for element in qs:
+        for element in qs:‍
             element['body_status'] = body_status_rev_dict[element['body_status']]
 
         data = {
