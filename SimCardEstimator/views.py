@@ -127,7 +127,7 @@ class SimcardView(viewsets.ModelViewSet):
 
         now = datetime.now(pytz.timezone('Asia/Tehran'))
         current_time = now.strftime("%H:%M:%S")
-        date_time = jdatetime.datetime.now().strftime("%d/%m/%Y")
+        date_time = jdatetime.datetime.now().strftime("%Y/%m/%d")
         time = f"{date_time}  {current_time}"
 
         history_data = f"number: {number}, rond: {rond}, stock: {stock}, daemi: {daemi}"

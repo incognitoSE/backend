@@ -9,6 +9,7 @@ from .serializers import UserProfileSerializer, UserhistorySerializer, UserWalle
 from .models import UserProfile, UserHistory, UserWallet, UserTransactions, Notifications
 from .permissions import UpdatingProfilePermission
 import jdatetime
+import pytz
 from datetime import datetime
 
 
@@ -50,7 +51,7 @@ class UserHistoryViewset(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         qs = list(UserHistory.objects.filter(user=self.request.user).values())
-        return Response(qs, status=status.HTTP_200_OK)
+        return Response(reversed(qs), status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         return Response({"Message: Nothing to post"}, status=status.HTTP_201_CREATED)
@@ -63,7 +64,7 @@ class UserTransactionsViewset(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         qs = list(UserTransactions.objects.filter(user=self.request.user).values())
-        return Response(qs, status=status.HTTP_200_OK)
+        return Response(reversed(qs), status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         return Response({"Message: Nothing to post"}, status=status.HTTP_201_CREATED)
@@ -95,9 +96,9 @@ class UserWalletViewset(viewsets.ModelViewSet):
         user_wallet.amount += amount
         user_wallet.save()
 
-        now = datetime.now()
+        now = datetime.now(pytz.timezone('Asia/Tehran'))
         current_time = now.strftime("%H:%M:%S")
-        date_time = jdatetime.datetime.now().strftime("%d/%m/%Y")
+        date_time = jdatetime.datetime.now().strftime("%Y/%m/%d")
         time = f"{date_time}  {current_time}"
         transaction = UserTransactions(user=user, type="افزایش اعتبار", amount=amount, date=time)
         transaction.save()

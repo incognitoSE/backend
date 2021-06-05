@@ -119,7 +119,7 @@ class Houseview(viewsets.ModelViewSet):
         # jdate = jdatetime.datetime.now()
         now = datetime.now(pytz.timezone('Asia/Tehran'))
         current_time = now.strftime("%H:%M:%S")
-        date_time = jdatetime.datetime.now().strftime("%d/%m/%Y")
+        date_time = jdatetime.datetime.now().strftime("%Y/%m/%d")
         time = f"{date_time}  {current_time}"
         history_data = f"area: {area}, room: {room}, year: {year}, location: {location}"
         history = UserHistory(user=user, model="سرویس خانه", data=history_data, price=price, date=time)

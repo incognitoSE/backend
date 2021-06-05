@@ -159,7 +159,7 @@ class CarView(viewsets.ModelViewSet):
 
         now = datetime.now(pytz.timezone('Asia/Tehran'))
         current_time = now.strftime("%H:%M:%S")
-        date_time = jdatetime.datetime.now().strftime("%d/%m/%Y")
+        date_time = jdatetime.datetime.now().strftime("%Y/%m/%d")
         time = f"{date_time}  {current_time}"
         history_data = f"brand: {brand}, model: {model}, mileage: {mileage}, year: {year}, body_status: {body_status}"
         history = UserHistory(user=user, model="سرویس ماشین", data=history_data, price=price, date=time)
