@@ -47,16 +47,11 @@ blocks:
           - checkout
           - cache restore
           - pip install --cache-dir .pip_cache -r requirements.txt
-          - unzip -u HouseEstimator/Model/houseestimator.zip -d HouseEstimator/Model
       jobs:
         - name: Unit Tests
           commands:
             - python manage.py makemigrations
             - python manage.py migrate
             - python manage.py test
-      epilogue:
-        always:
-          commands:
-            - rm HouseEstimator/Model/houseestimator.pkl
     skip:
       when: branch = 'master'
