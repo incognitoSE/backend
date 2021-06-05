@@ -15,4 +15,5 @@ services:
     container_name: back
     ports:
       - 8000:8000
+      - 587:587
     restart: on-failure
