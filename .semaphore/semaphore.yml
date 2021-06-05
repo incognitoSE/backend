@@ -50,4 +50,8 @@ blocks:
       jobs:
         - name: Unit Tests
           commands:
+            - python manage.py makemigrations
+            - python manage.py migrate
             - python manage.py test
+    skip:
+      when: branch = 'master'
