@@ -45,14 +45,14 @@ def explore(addresss):
     return data
 
 
-with zipfile.ZipFile("HouseEstimator/Model/houseestimator.zip", "r") as zip_ref:
-    zip_ref.extractall("HouseEstimator/Model")
+# with zipfile.ZipFile("HouseEstimator/Model/houseestimator.zip", "r") as zip_ref:
+#     zip_ref.extractall("HouseEstimator/Model")
 
-with open('HouseEstimator/Model/lableencoder.pkl', 'rb') as file:
-    L_encoder = pickle.load(file)
+# with open('HouseEstimator/Model/lableencoder.pkl', 'rb') as file:
+#     L_encoder = pickle.load(file)
 
-with open('HouseEstimator/Model/houseestimator.pkl', 'rb') as file:
-    pickled_model = pickle.load(file)
+# with open('HouseEstimator/Model/houseestimator.pkl', 'rb') as file:
+#     pickled_model = pickle.load(file)
 
 # with open('HouseEstimator/Model/Screenshot from 2021-06-02 14-25-00.png', "rb") as f:
 #     # images.append(f.read().decode('utf8', 'ignore'))
@@ -102,9 +102,9 @@ class Houseview(viewsets.ModelViewSet):
         L_encoder.fit(list(location))
         loc = L_encoder.transform(list(location))[0]
 
-        price = pickled_model.predict(np.array([loc, area, room, year]).reshape(1, -1))
+        # price = pickled_model.predict(np.array([loc, area, room, year]).reshape(1, -1))
+        price = [3000000000]
         price = int(price[0])
-        # price = 3000000000
 
         qs = list(House.objects.filter(location=location,
                                        room=room,

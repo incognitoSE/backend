@@ -55,14 +55,14 @@ def explore(addresss):
     return data
 
 
-with zipfile.ZipFile("SimCardEstimator/Model/simestimator.zip", "r") as zip_ref:
-    zip_ref.extractall("SimCardEstimator/Model")
+# with zipfile.ZipFile("SimCardEstimator/Model/simestimator.zip", "r") as zip_ref:
+#     zip_ref.extractall("SimCardEstimator/Model")
 
-with open('SimCardEstimator/Model/sim_lableencoder.pkl', 'rb') as file:
-    L_encoder = pickle.load(file)
+# with open('SimCardEstimator/Model/sim_lableencoder.pkl', 'rb') as file:
+#     L_encoder = pickle.load(file)
 
-with open('SimCardEstimator/Model/simestimator.pkl', 'rb') as file:
-    pickled_model = pickle.load(file)
+# with open('SimCardEstimator/Model/simestimator.pkl', 'rb') as file:
+#     pickled_model = pickle.load(file)
 
 
 images = explore('SimCardEstimator/Model/')
@@ -106,7 +106,8 @@ class SimcardView(viewsets.ModelViewSet):
         L_encoder.fit(list(daemi))
         daemi_ = L_encoder.transform(list(daemi))[0]
 
-        price = pickled_model.predict(np.array([number, rond_, stock_, daemi_]).reshape(1, -1))
+        # price = pickled_model.predict(np.array([number, rond_, stock_, daemi_]).reshape(1, -1))
+        price = [550]
         price = int(price[0])
 
         qs = list(Simcard.objects.filter(rond=yesorno[rond],
