@@ -58,8 +58,8 @@ def explore(addresss):
 # with zipfile.ZipFile("SimCardEstimator/Model/simestimator.zip", "r") as zip_ref:
 #     zip_ref.extractall("SimCardEstimator/Model")
 
-# with open('SimCardEstimator/Model/sim_lableencoder.pkl', 'rb') as file:
-#     L_encoder = pickle.load(file)
+with open('SimCardEstimator/Model/sim_lableencoder.pkl', 'rb') as file:
+    L_encoder = pickle.load(file)
 
 # with open('SimCardEstimator/Model/simestimator.pkl', 'rb') as file:
 #     pickled_model = pickle.load(file)

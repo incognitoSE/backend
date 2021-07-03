@@ -47,8 +47,8 @@ def explore(addresss):
 # with zipfile.ZipFile("CarEstimator/Model/carestimator.zip", "r") as zip_ref:
 #     zip_ref.extractall("CarEstimator/Model")
 
-# with open('CarEstimator/Model/car_lableencoder.pkl', 'rb') as file:
-#     L_encoder = pickle.load(file)
+with open('CarEstimator/Model/car_lableencoder.pkl', 'rb') as file:
+    L_encoder = pickle.load(file)
 
 # with open('CarEstimator/Model/carestimator.pkl', 'rb') as file:
 #     pickled_model = pickle.load(file)
@@ -149,7 +149,7 @@ class CarView(viewsets.ModelViewSet):
                                      price__gte=price - 400000000
                                      ).values())
 
-        for element in qs:‍
+        for element in qs:
             element['body_status'] = body_status_rev_dict[element['body_status']]
 
         data = {

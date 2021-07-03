@@ -48,8 +48,8 @@ def explore(addresss):
 # with zipfile.ZipFile("HouseEstimator/Model/houseestimator.zip", "r") as zip_ref:
 #     zip_ref.extractall("HouseEstimator/Model")
 
-# with open('HouseEstimator/Model/lableencoder.pkl', 'rb') as file:
-#     L_encoder = pickle.load(file)
+with open('HouseEstimator/Model/lableencoder.pkl', 'rb') as file:
+    L_encoder = pickle.load(file)
 
 # with open('HouseEstimator/Model/houseestimator.pkl', 'rb') as file:
 #     pickled_model = pickle.load(file)
